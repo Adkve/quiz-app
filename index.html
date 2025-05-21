@@ -3,22 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quiz with Timer</title>
+  <title>Quiz</title>
   <style>
-    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; background: #f9f9f9; }
-    h1 { text-align: center; color: #2c3e50; }
-    .question { margin-bottom: 20px; background: #fff; padding: 15px; border-left: 4px solid #3498db; border-radius: 5px; }
-    .options label { display: block; margin: 5px 0; }
-    #timer { font-size: 24px; color: #e74c3c; text-align: center; margin-bottom: 20px; font-weight: bold; }
-    button { padding: 10px 20px; font-size: 16px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    button:hover { background: #2980b9; }
+    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; background: #f4f4f4; }
+    h1 { text-align: center; }
+    .question { background: #fff; padding: 15px; margin: 15px 0; border-left: 4px solid #3498db; border-radius: 4px; }
+    label { display: block; margin: 5px 0; }
+    #timer { font-size: 20px; font-weight: bold; color: #e74c3c; text-align: center; margin-bottom: 20px; }
+    button { padding: 10px 20px; background: #3498db; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
   </style>
 </head>
 <body>
-  <h1>Online Quiz</h1>
-  <div id="timer">Loading Timer...</div>
+  <h1>Advanced Quiz</h1>
+  <div id="timer">Loading timer...</div>
 
   <form id="quizForm">
+
+    <!-- Maths Section -->
+    <h2>Maths</h2>
     <div class="question">
       <p>1. What is 15 + 27?</p>
       <label><input type="radio" name="q1" value="a">32</label>
@@ -26,7 +28,6 @@
       <label><input type="radio" name="q1" value="c">52</label>
       <label><input type="radio" name="q1" value="d">62</label>
     </div>
-
     <div class="question">
       <p>2. What is 8 × 9?</p>
       <label><input type="radio" name="q2" value="a">72</label>
@@ -35,6 +36,8 @@
       <label><input type="radio" name="q2" value="d">56</label>
     </div>
 
+    <!-- Science Section -->
+    <h2>Science</h2>
     <div class="question">
       <p>31. Which planet is known as the Red Planet?</p>
       <label><input type="radio" name="q31" value="a">Venus</label>
@@ -42,25 +45,25 @@
       <label><input type="radio" name="q31" value="c">Jupiter</label>
       <label><input type="radio" name="q31" value="d">Saturn</label>
     </div>
-
     <div class="question">
       <p>32. What is H₂O?</p>
-      <label><input type="radio" name="q32" value="a">Carbon Dioxide</label>
+      <label><input type="radio" name="q32" value="a">CO₂</label>
       <label><input type="radio" name="q32" value="b">Water</label>
       <label><input type="radio" name="q32" value="c">Salt</label>
       <label><input type="radio" name="q32" value="d">Oxygen</label>
     </div>
 
+    <!-- GK Section -->
+    <h2>General Knowledge</h2>
     <div class="question">
       <p>61. Who wrote 'Romeo and Juliet'?</p>
-      <label><input type="radio" name="q61" value="a">Charles Dickens</label>
-      <label><input type="radio" name="q61" value="b">William Shakespeare</label>
-      <label><input type="radio" name="q61" value="c">Jane Austen</label>
-      <label><input type="radio" name="q61" value="d">Mark Twain</label>
+      <label><input type="radio" name="q61" value="a">Dickens</label>
+      <label><input type="radio" name="q61" value="b">Shakespeare</label>
+      <label><input type="radio" name="q61" value="c">Austen</label>
+      <label><input type="radio" name="q61" value="d">Twain</label>
     </div>
-
     <div class="question">
-      <p>62. What is the capital of France?</p>
+      <p>62. Capital of France?</p>
       <label><input type="radio" name="q62" value="a">London</label>
       <label><input type="radio" name="q62" value="b">Berlin</label>
       <label><input type="radio" name="q62" value="c">Paris</label>
@@ -71,66 +74,91 @@
   </form>
 
   <script>
-    // ✅ Correct Answers
     const correctAnswers = {
-      q1: "b", q2: "a", q31: "b", q32: "b", q61: "b", q62: "c"
+      q1: "b", q2: "a",
+      q31: "b", q32: "b",
+      q61: "b", q62: "c"
     };
 
-    // ✅ Timer Logic (2 hours)
-    let totalSeconds = 2 * 60 * 60;
-    const timerDisplay = document.getElementById('timer');
-    const timerInterval = setInterval(() => {
-      if (totalSeconds <= 0) {
-        clearInterval(timerInterval);
+    const sections = {
+      Maths: ["q1", "q2"],
+      Science: ["q31", "q32"],
+      GK: ["q61", "q62"]
+    };
+
+    // Timer (2 hours = 7200 seconds)
+    let timeLeft = 7200;
+    const timer = document.getElementById("timer");
+    const interval = setInterval(() => {
+      if (timeLeft <= 0) {
+        clearInterval(interval);
         submitQuiz();
         return;
       }
-      const h = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
-      const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
-      const s = String(totalSeconds % 60).padStart(2, '0');
-      timerDisplay.textContent = `Time Left: ${h}:${m}:${s}`;
-      totalSeconds--;
+      const h = String(Math.floor(timeLeft / 3600)).padStart(2, '0');
+      const m = String(Math.floor((timeLeft % 3600) / 60)).padStart(2, '0');
+      const s = String(timeLeft % 60).padStart(2, '0');
+      timer.textContent = `Time Left: ${h}:${m}:${s}`;
+      timeLeft--;
     }, 1000);
 
-    // ✅ Submit Quiz
     function submitQuiz() {
-      clearInterval(timerInterval);
-      const form = document.getElementById('quizForm');
-      let total = 0, correct = 0;
+      clearInterval(interval);
+      const form = document.getElementById("quizForm");
+      let totalScore = 0;
+      const result = {};
 
-      for (let key in correctAnswers) {
-        const selected = form.querySelector(`input[name="${key}"]:checked`);
-        if (selected) {
-          if (selected.value === correctAnswers[key]) {
-            total += 1;
+      for (let section in sections) {
+        let correct = 0, incorrect = 0, unattempted = 0;
+
+        sections[section].forEach(q => {
+          const selected = form.querySelector(`input[name="${q}"]:checked`);
+          if (!selected) {
+            unattempted++;
+          } else if (selected.value === correctAnswers[q]) {
             correct++;
+            totalScore += 1;
           } else {
-            total -= 0.33;
+            incorrect++;
+            totalScore -= 0.33;
           }
-        }
+        });
+
+        result[section] = {
+          correct, incorrect, unattempted,
+          score: Math.max(0, correct - incorrect * 0.33).toFixed(2)
+        };
       }
 
-      const resultWindow = window.open("", "_blank");
-      resultWindow.document.write(`
+      const newWin = window.open("", "_blank");
+      newWin.document.write(`
         <html>
           <head>
-            <title>Quiz Result</title>
+            <title>Result</title>
             <style>
               body { font-family: sans-serif; padding: 20px; }
-              h2 { color: #2c3e50; }
-              .score { font-size: 24px; font-weight: bold; color: #27ae60; }
-              button { padding: 10px 20px; margin-top: 20px; }
+              h1 { color: #2c3e50; }
+              .section { margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-left: 4px solid #3498db; }
+              .total { font-size: 20px; font-weight: bold; color: #27ae60; }
             </style>
           </head>
           <body>
-            <h2>Quiz Submitted!</h2>
-            <p class="score">Your Score: ${Math.max(0, total.toFixed(2))} / 6</p>
-            <p>Correct Answers: ${correct}</p>
-            <button onclick="window.print()">Print Result</button>
+            <h1>Your Score Card</h1>
+            ${Object.keys(result).map(sec => `
+              <div class="section">
+                <h3>${sec}</h3>
+                <p>Correct: ${result[sec].correct}</p>
+                <p>Incorrect: ${result[sec].incorrect}</p>
+                <p>Unattempted: ${result[sec].unattempted}</p>
+                <p>Score: ${result[sec].score}</p>
+              </div>
+            `).join("")}
+            <div class="total">Total Score: ${Math.max(0, totalScore).toFixed(2)}</div>
+            <button onclick="window.print()">Print</button>
           </body>
         </html>
       `);
-      resultWindow.document.close();
+      newWin.document.close();
     }
   </script>
 </body>

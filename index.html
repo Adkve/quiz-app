@@ -3,14 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quiz</title>
+  <title>Advanced Quiz</title>
   <style>
     body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; background: #f4f4f4; }
-    h1 { text-align: center; }
+    h1 { text-align: center; color: #2c3e50; }
     .question { background: #fff; padding: 15px; margin: 15px 0; border-left: 4px solid #3498db; border-radius: 4px; }
     label { display: block; margin: 5px 0; }
     #timer { font-size: 20px; font-weight: bold; color: #e74c3c; text-align: center; margin-bottom: 20px; }
     button { padding: 10px 20px; background: #3498db; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+    .section-heading {
+      background: #fff8e1;
+      border-left: 5px solid #ffc107;
+      padding: 10px;
+      font-size: 18px;
+      margin-top: 30px;
+      margin-bottom: 10px;
+      color: #333;
+      font-weight: bold;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
@@ -19,8 +30,9 @@
 
   <form id="quizForm">
 
-    <!-- Maths Section -->
-    <h2>Maths</h2>
+    <!-- Section: Maths -->
+    <div class="section-heading">👉 Now Starting: Mathematics Section</div>
+
     <div class="question">
       <p>1. What is 15 + 27?</p>
       <label><input type="radio" name="q1" value="a">32</label>
@@ -36,8 +48,9 @@
       <label><input type="radio" name="q2" value="d">56</label>
     </div>
 
-    <!-- Science Section -->
-    <h2>Science</h2>
+    <!-- Section: Science -->
+    <div class="section-heading">👉 Now Starting: Science Section</div>
+
     <div class="question">
       <p>31. Which planet is known as the Red Planet?</p>
       <label><input type="radio" name="q31" value="a">Venus</label>
@@ -53,8 +66,9 @@
       <label><input type="radio" name="q32" value="d">Oxygen</label>
     </div>
 
-    <!-- GK Section -->
-    <h2>General Knowledge</h2>
+    <!-- Section: GK -->
+    <div class="section-heading">👉 Now Starting: General Knowledge Section</div>
+
     <div class="question">
       <p>61. Who wrote 'Romeo and Juliet'?</p>
       <label><input type="radio" name="q61" value="a">Dickens</label>
@@ -81,12 +95,11 @@
     };
 
     const sections = {
-      Maths: ["q1", "q2"],
-      Science: ["q31", "q32"],
-      GK: ["q61", "q62"]
+      "Mathematics Section": ["q1", "q2"],
+      "Science Section": ["q31", "q32"],
+      "General Knowledge Section": ["q61", "q62"]
     };
 
-    // Timer (2 hours = 7200 seconds)
     let timeLeft = 7200;
     const timer = document.getElementById("timer");
     const interval = setInterval(() => {
@@ -147,14 +160,14 @@
             ${Object.keys(result).map(sec => `
               <div class="section">
                 <h3>${sec}</h3>
-                <p>Correct: ${result[sec].correct}</p>
-                <p>Incorrect: ${result[sec].incorrect}</p>
-                <p>Unattempted: ${result[sec].unattempted}</p>
-                <p>Score: ${result[sec].score}</p>
+                <p>✅ Correct: ${result[sec].correct}</p>
+                <p>❌ Incorrect: ${result[sec].incorrect}</p>
+                <p>⚪ Unattempted: ${result[sec].unattempted}</p>
+                <p>📊 Score: ${result[sec].score}</p>
               </div>
             `).join("")}
-            <div class="total">Total Score: ${Math.max(0, totalScore).toFixed(2)}</div>
-            <button onclick="window.print()">Print</button>
+            <div class="total">🏁 Total Score: ${Math.max(0, totalScore).toFixed(2)}</div>
+            <button onclick="window.print()">🖨️ Print Result</button>
           </body>
         </html>
       `);

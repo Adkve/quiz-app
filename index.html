@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MCQ Test - 3 Sections</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .question { margin-bottom: 20px; }
+    .section-title { font-weight: bold; margin-top: 30px; font-size: 20px; color: #2b4a9c; }
+    .btn { padding: 10px 15px; font-size: 16px; }
+    .result { margin-top: 30px; padding: 20px; background-color: #f0f0f0; }
+    .hidden { display: none; }
+    .timer { font-weight: bold; color: red; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <h1>Mock Test (Physics, Chemistry, Math)</h1>
+  <div class="timer" id="timer">Time Left: 2:00:00</div>
+  <form id="quizForm">
+    <div class="section-title">Physics</div>
+    <div class="question" data-subject="Physics">
+      <p>1. What is the unit of Force?</p>
+      <label><input type="radio" name="q1" value="A"> Watt</label><br>
+      <label><input type="radio" name="q1" value="B"> Pascal</label><br>
+      <label><input type="radio" name="q1" value="C"> Newton</label><br>
+      <label><input type="radio" name="q1" value="D"> Joule</label>
+      <input type="hidden" value="C" class="answer">
+    </div>
+    <div class="question" data-subject="Physics">
+      <p>2. Speed of light is?</p>
+      <label><input type="radio" name="q2" value="A"> 3x10^8 m/s</label><br>
+      <label><input type="radio" name="q2" value="B"> 5x10^6 m/s</label><br>
+      <label><input type="radio" name="q2" value="C"> 1x10^7 m/s</label><br>
+      <label><input type="radio" name="q2" value="D"> 9x10^9 m/s</label>
+      <input type="hidden" value="A" class="answer">
+    </div>
+
+    <div class="section-title">Chemistry</div>
+    <div class="question" data-subject="Chemistry">
+      <p>3. Water formula is?</p>
+      <label><input type="radio" name="q3" value="A"> H2O</label><br>
+      <label><input type="radio" name="q3" value="B"> CO2</label><br>
+      <label><input type="radio" name="q3" value="C"> H2</label><br>
+      <label><input type="radio" name="q3" value="D"> O2</label>
+      <input type="hidden" value="A" class="answer">
+    </div>
+    <div class="question" data-subject="Chemistry">
+      <p>4. Atomic number of Oxygen?</p>
+      <label><input type="radio" name="q4" value="A"> 6</label><br>
+      <label><input type="radio" name="q4" value="B"> 8</label><br>
+      <label><input type="radio" name="q4" value="C"> 12</label><br>
+      <label><input type="radio" name="q4" value="D"> 16</label>
+      <input type="hidden" value="B" class="answer">
+    </div>
+
+    <div class="section-title">Math</div>
+    <div class="question" data-subject="Math">
+      <p>5. What is 2 + 2?</p>
+      <label><input type="radio" name="q5" value="A"> 3</label><br>
+      <label><input type="radio" name="q5" value="B"> 4</label><br>
+      <label><input type="radio" name="q5" value="C"> 5</label><br>
+      <label><input type="radio" name="q5" value="D"> 6</label>
+      <input type="hidden" value="B" class="answer">
+    </div>
+    <div class="question" data-subject="Math">
+      <p>6. Square root of 16?</p>
+      <label><input type="radio" name="q6" value="A"> 2</label><br>
+      <label><input type="radio" name="q6" value="B"> 3</label><br>
+      <label><input type="radio" name="q6" value="C"> 4</label><br>
+      <label><input type="radio" name="q6" value="D"> 5</label>
+      <input type="hidden" value="C" class="answer">
+    </div>
+
+    <br>
+    <button type="button" class="btn" onclick="submitQuiz()">Submit</button>
+  </form>
+
+  <div id="result" class="result hidden"></div>
+
+  <script>
+    let timerDuration = 2 * 60 * 60;
+    const timerElement = document.getElementById("timer");
+    const interval = setInterval(() => {
+      const hours = String(Math.floor(timerDuration / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((timerDuration % 3600) / 60)).padStart(2, '0');
+      const seconds = String(timerDuration % 60).padStart(2, '0');
+      timerElement.textContent = `Time Left: ${hours}:${minutes}:${seconds}`;
+      if (--timerDuration < 0) {
+        clearInterval(interval);
+        submitQuiz();
+      }
+    }, 1000);
+
+    function submitQuiz() {
+      clearInterval(interval);
+      const questions = document.querySelectorAll('.question');
+      const scores = {};
+      let totalCorrect = 0, totalIncorrect = 0, totalUnattempted = 0;
+
+      questions.forEach(q => {
+        const subject = q.dataset.subject;
+        const selected = q.querySelector('input[type="radio"]:checked');
+        const correct = q.querySelector('.answer').value;
+
+        if (!scores[subject]) scores[subject] = { correct: 0, incorrect: 0, unattempted: 0 };
+
+        if (!selected) {
+          scores[subject].unattempted++;
+          totalUnattempted++;
+        } else if (selected.value === correct) {
+          scores[subject].correct++;
+          totalCorrect++;
+        } else {
+          scores[subject].incorrect++;
+          totalIncorrect++;
+        }
+      });
+
+      let resultText = `<h2>Result</h2>`;
+      resultText += `<p>Total Questions: ${questions.length}</p>`;
+      resultText += `<p>Correct: ${totalCorrect}, Incorrect: ${totalIncorrect}, Unattempted: ${totalUnattempted}</p>`;
+      const finalScore = totalCorrect * 1 - totalIncorrect * 0.33;
+      resultText += `<p><strong>Total Score: ${finalScore.toFixed(2)}</strong></p>`;
+
+      resultText += `<h3>Subject-wise Breakdown</h3><ul>`;
+      for (let subject in scores) {
+        const s = scores[subject];
+        const subjectScore = s.correct * 1 - s.incorrect * 0.33;
+        resultText += `<li><strong>${subject}:</strong> Correct: ${s.correct}, Incorrect: ${s.incorrect}, Unattempted: ${s.unattempted} → Score: ${subjectScore.toFixed(2)}</li>`;
+      }
+      resultText += `</ul>`;
+
+      document.getElementById("result").innerHTML = resultText;
+      document.getElementById("result").classList.remove("hidden");
+      document.querySelectorAll("input").forEach(i => i.disabled = true);
+    }
+  </script>
+</body>
+</html>
